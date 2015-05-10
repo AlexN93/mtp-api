@@ -25,11 +25,19 @@ class TransactionController extends Controller
             $transaction->setTransactionTime(new \DateTime($date));
             $transaction->setTransactionOrigin($params['originatingCountry']);
             
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($transaction);
-            $em->flush();
-            $transaction->transmitData($params);
-            return new Response('Created Transaction with id '.$transaction->getTransactionID());
+            $validator = $this->get('validator');
+            $errors = $validator->validate($transaction);
+            if (count($errors) > 0) {
+                $errorsString = (string) $errors;
+                return new Response($errorsString);
+            }
+            else {
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($transaction);
+                $em->flush();
+                $transaction->transmitData($params);
+                return new Response('Created Transaction with id '.$transaction->getTransactionID());
+            }
         }
     }
     

@@ -2,6 +2,7 @@
 namespace LexxTech\MTPBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use ElephantIO\Client,
     ElephantIO\Engine\SocketIO\Version1X;
 
@@ -20,41 +21,49 @@ class Transaction
 
     /**
      * @ORM\Column(type="integer", length=11)
+     * @Assert\NotBlank()
      */
     protected $TransactionUserID;
 
     /**
      * @ORM\Column(type="string", length=5)
+     * @Assert\NotBlank()
      */
     protected $TransactionCurrencyFrom;
     
     /**
      * @ORM\Column(type="string", length=5)
+     * @Assert\NotBlank()
      */
     protected $TransactionCurrencyTo;
     
     /**
      * @ORM\Column(type="decimal", scale=2)
+     * @Assert\NotBlank()
      */
     protected $TransactionAmountSell;
     
     /**
      * @ORM\Column(type="decimal", scale=2)
+     * @Assert\NotBlank()
      */
     protected $TransactionAmountBuy;
             
     /**
      * @ORM\Column(type="decimal", scale=5)
+     * @Assert\NotBlank()
      */
     protected $TransactionRate;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\NotBlank()
      */
     protected $TransactionTime;
     
     /**
      * @ORM\Column(type="string", length=5)
+     * @Assert\NotBlank()
      */
     protected $TransactionOrigin;
     
