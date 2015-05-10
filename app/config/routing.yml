@@ -1,0 +1,4 @@
+lexx_tech_mtp:
+    resource: "@LexxTechMTPBundle/Resources/config/routing.yml"
+    prefix:   /
+

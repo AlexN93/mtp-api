@@ -1,0 +1,15 @@
+lexx_tech_mtp_register:
+    path:     /registerTransaction
+    defaults: { _controller: LexxTechMTPBundle:Transaction:registerTransaction }
+
+lexx_tech_mtp_list:
+    path:     /listTransactions/{country}
+    defaults: { _controller: LexxTechMTPBundle:Transaction:listTransactions, country: null }
+    
+lexx_tech_mtp_count:
+    path:     /transactionsPerCountry
+    defaults: { _controller: LexxTechMTPBundle:Transaction:transactionsPerCountry}
+    
+lexx_tech_mtp_index:
+    path:     /index
+    defaults: { _controller: LexxTechMTPBundle:Transaction:index }
