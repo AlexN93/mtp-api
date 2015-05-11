@@ -85,3 +85,7 @@ $ git clone https://github.com/AlexN93/mtp-api.git
 $ composer install
 $ php app/console doctrine:schema:update --force
 ```
+
+## Unit test
+
+Sometime in the future when I've time to write them :)
