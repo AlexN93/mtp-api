@@ -1,70 +1,87 @@
-Symfony Standard Edition
-========================
+##MTP API
 
-Welcome to the Symfony Standard Edition - a fully-functional Symfony2
-application that you can use as the skeleton for your new applications.
+This repo contains the source code of MTP API <br>
+Author: Aleksandar Nikolov <br>
+Deployed: https://mtp-api.herokuapp.com/ <br>
+Data of transactions can be posted to https://mtp-api.herokuapp.com/registerTransaction and will be written in the database and transmitted to [MTP Web App](https://mtp-webapp.herokuapp.com/) <br>
 
-For details on how to download and get started with Symfony, see the
-[Installation][1] chapter of the Symfony Documentation.
+##Tech Stack:
++ PHP(Symfony 2.6)
++ MySQL db
++ Elephant IO
 
-What's inside?
---------------
+##API spec:
++ POST :  /registerTransaction
+```
+Body request : 
+{"userId": "134256", "currencyFrom": "EUR", "currencyTo": "GBP", "amountSell": 1000, "amountBuy": 747.10, "rate": 0.7471, "timePlaced" : "24-JAN-15 10:27:44", "originatingCountry" : "FR"}
+```
 
-The Symfony Standard Edition is configured with the following defaults:
+If everything goes alright, it will return <br>
+```
+Created Transaction with id (someid)
+```
+And transmit the data to the [MTP Web App](https://mtp-webapp.herokuapp.com/) front end. <br>
 
-  * An AppBundle you can use to start coding;
++ GET: /transactionsPerCountry <br>
+```
+[
+    {
+        "TransactionCount": "15",
+        "TransactionOrigin": "FR"
+    },
+    {
+        "TransactionCount": "3",
+        "TransactionOrigin": "US"
+    },
+    {
+        "TransactionCount": "5",
+        "TransactionOrigin": "RU"
+    }
+]
+```
++ GET: /listTransactions/country <br>
+```
+[
+    {
+        "TransactionID": 6,
+        "TransactionUserID": 134256,
+        "TransactionCurrencyFrom": "EUR",
+        "TransactionCurrencyTo": "GBP",
+        "TransactionAmountSell": "1000.00",
+        "TransactionAmountBuy": "747.10",
+        "TransactionRate": "0.74710",
+        "TransactionTime": {
+            "date": "2015-01-24 10:27:44",
+            "timezone_type": 3,
+            "timezone": "Europe/Berlin"
+        },
+        "TransactionOrigin": "BG"
+    },
+    {
+        "TransactionID": 30,
+        "TransactionUserID": 134256,
+        "TransactionCurrencyFrom": "EUR",
+        "TransactionCurrencyTo": "GBP",
+        "TransactionAmountSell": "1000.00",
+        "TransactionAmountBuy": "747.10",
+        "TransactionRate": "0.74710",
+        "TransactionTime": {
+            "date": "2015-01-24 10:27:44",
+            "timezone_type": 3,
+            "timezone": "Europe/Berlin"
+        },
+        "TransactionOrigin": "BG"
+    }
+]
+```
 
-  * Twig as the only configured template engine;
-
-  * Doctrine ORM/DBAL;
-
-  * Swiftmailer;
-
-  * Annotations enabled for everything.
-
-It comes pre-configured with the following bundles:
-
-  * **FrameworkBundle** - The core Symfony framework bundle
-
-  * [**SensioFrameworkExtraBundle**][6] - Adds several enhancements, including
-    template and routing annotation capability
-
-  * [**DoctrineBundle**][7] - Adds support for the Doctrine ORM
-
-  * [**TwigBundle**][8] - Adds support for the Twig templating engine
-
-  * [**SecurityBundle**][9] - Adds security by integrating Symfony's security
-    component
-
-  * [**SwiftmailerBundle**][10] - Adds support for Swiftmailer, a library for
-    sending emails
-
-  * [**MonologBundle**][11] - Adds support for Monolog, a logging library
-
-  * [**AsseticBundle**][12] - Adds support for Assetic, an asset processing
-    library
-
-  * **WebProfilerBundle** (in dev/test env) - Adds profiling functionality and
-    the web debug toolbar
-
-  * **SensioDistributionBundle** (in dev/test env) - Adds functionality for
-    configuring and working with Symfony distributions
-
-  * [**SensioGeneratorBundle**][13] (in dev/test env) - Adds code generation
-    capabilities
-
-All libraries and bundles included in the Symfony Standard Edition are
-released under the MIT or BSD license.
-
-Enjoy!
-
-[1]:  http://symfony.com/doc/2.6/book/installation.html
-[6]:  http://symfony.com/doc/2.6/bundles/SensioFrameworkExtraBundle/index.html
-[7]:  http://symfony.com/doc/2.6/book/doctrine.html
-[8]:  http://symfony.com/doc/2.6/book/templating.html
-[9]:  http://symfony.com/doc/2.6/book/security.html
-[10]: http://symfony.com/doc/2.6/cookbook/email.html
-[11]: http://symfony.com/doc/2.6/cookbook/logging/monolog.html
-[12]: http://symfony.com/doc/2.6/cookbook/assetic/asset_management.html
-[13]: http://symfony.com/doc/2.6/bundles/SensioGeneratorBundle/index.html
-# mtp-api
+##Getting started:
+To run this server, you will need: <br>
+1. You will need Apache web server and MySQL db installed <br>
+2. Installing through terminal <br>
+```
+$ git clone https://github.com/AlexN93/mtp-api.git
+$ composer install
+$ php app/console doctrine:schema:update --force
+```

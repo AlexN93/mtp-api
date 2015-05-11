@@ -67,7 +67,7 @@ class TransactionController extends Controller
     public function transactionsPerCountryAction() {
         $repository = $this->getDoctrine()->getRepository('LexxTechMTPBundle:Transaction');
         $transactions = $repository->createQueryBuilder('p')
-                ->select('count(p), p.TransactionOrigin')
+                ->select('count(p) AS TransactionCount, p.TransactionOrigin')
                 ->groupBy('p.TransactionOrigin')
                 ->orderBy('p.TransactionID', 'ASC')
                 ->getQuery()
