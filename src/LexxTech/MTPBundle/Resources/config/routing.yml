@@ -13,3 +13,7 @@ lexx_tech_mtp_count:
 lexx_tech_mtp_index:
     path:     /index
     defaults: { _controller: LexxTechMTPBundle:Transaction:index }
+    
+lexx_tech_mtp_welcome:
+    path:     /
+    defaults: { _controller: LexxTechMTPBundle:Transaction:welcome }

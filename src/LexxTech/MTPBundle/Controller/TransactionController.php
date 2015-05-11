@@ -85,4 +85,8 @@ class TransactionController extends Controller
         return $this->render('LexxTechMTPBundle:Default:index.html.twig');
     }
     
+    public function welcomeAction()
+    {
+        return $this->render('LexxTechMTPBundle:Default:welcome.html.twig');
+    }
 }
