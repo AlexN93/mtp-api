@@ -4,11 +4,12 @@ namespace LexxTech\MTPBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use LexxTech\MTPBundle\Entity\Transaction;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use ElephantIO\Client,
+    ElephantIO\Engine\SocketIO\Version1X;
 
 class TransactionController extends Controller
-{
+{    
     public function registerTransactionAction()
     {
         $data = $this->get("request")->getContent();
@@ -29,15 +30,18 @@ class TransactionController extends Controller
             $errors = $validator->validate($transaction);
             if (count($errors) > 0) {
                 $errorsString = (string) $errors;
-                return new Response($errorsString);
+                return new JsonResponse(array('message' => $errorsString), 200, $this->getHeaders());
             }
             else {
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($transaction);
                 $em->flush();
-                $transaction->transmitData($params);
-                return new Response('Created Transaction with id '.$transaction->getTransactionID());
+                $this->transmitData($params);
+                return new JsonResponse(array('message' => 'Created Transaction with id '.$transaction->getTransactionID()), 200, $this->getHeaders());
             }
+        }
+        else {
+            return new JsonResponse(array('message' => 'empty data'), 200, $this->getHeaders());
         }
     }
     
@@ -56,12 +60,7 @@ class TransactionController extends Controller
                 ->getQuery()
                 ->getArrayResult();
         }
-        return new JsonResponse($transactions, 200, array(
-            "Content-type" => "application/json",
-            "Access-Control-Allow-Origin" => "*",
-            "Access-Control-Allow-Methods" => "GET, OPTIONS",
-            "Access-Control-Allow-Headers" => "origin, content-type, accept",
-        ));
+        return new JsonResponse($transactions, 200, $this->getHeaders());
     }
     
     public function transactionsPerCountryAction() {
@@ -72,12 +71,7 @@ class TransactionController extends Controller
                 ->orderBy('p.TransactionID', 'ASC')
                 ->getQuery()
                 ->getArrayResult();
-        return new JsonResponse($transactions, 200, array(
-            "Content-type" => "application/json",
-            "Access-Control-Allow-Origin" => "*",
-            "Access-Control-Allow-Methods" => "GET, OPTIONS",
-            "Access-Control-Allow-Headers" => "origin, content-type, accept",
-        ));
+        return new JsonResponse($transactions, 200, $this->getHeaders());
     }
     
     public function indexAction()
@@ -88,5 +82,22 @@ class TransactionController extends Controller
     public function welcomeAction()
     {
         return $this->render('LexxTechMTPBundle:Default:welcome.html.twig');
+    }
+    
+    private static function getHeaders()
+    {
+        return array(
+            "Content-type" => "application/json",
+            "Access-Control-Allow-Origin" => "*",
+            "Access-Control-Allow-Methods" => "POST, GET, OPTIONS",
+            "Access-Control-Allow-Headers" => "origin, content-type, accept",
+        );
+    }
+    
+    private static function transmitData($params) {
+        $client = new Client(new Version1X('https://mtp-webapp.herokuapp.com'));
+        $client->initialize();
+        $client->emit('send transaction', $params);
+        $client->close();
     }
 }

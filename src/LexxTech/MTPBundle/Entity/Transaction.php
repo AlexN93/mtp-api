@@ -3,8 +3,6 @@ namespace LexxTech\MTPBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use ElephantIO\Client,
-    ElephantIO\Engine\SocketIO\Version1X;
 
 /**
  * @ORM\Entity
@@ -21,53 +19,89 @@ class Transaction
 
     /**
      * @ORM\Column(type="integer", length=11)
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(
+     *      message="TransactionUserID cannot be empty"
+     * )
+     * @Assert\Range(
+     *      min = 1,
+     *      minMessage = "Min TransactionUserID is {{ limit }}"
+     * )
      */
     protected $TransactionUserID;
 
     /**
      * @ORM\Column(type="string", length=5)
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(
+     *      message="TransactionCurrencyFrom cannot be empty"
+     * )
      */
     protected $TransactionCurrencyFrom;
     
     /**
      * @ORM\Column(type="string", length=5)
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(
+     *      message="TransactionCurrencyTo cannot be empty"
+     * )
      */
     protected $TransactionCurrencyTo;
     
     /**
      * @ORM\Column(type="decimal", scale=2)
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(
+     *      message="TransactionAmountSell cannot be empty"
+     * )
+     * @Assert\Range(
+     *      min = 0.01,
+     *      minMessage = "Min TransactionAmountSell is {{ limit }}"
+     * )
      */
     protected $TransactionAmountSell;
     
     /**
      * @ORM\Column(type="decimal", scale=2)
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(
+     *      message="TransactionAmountBuy cannot be empty"
+     * )
+     * @Assert\Range(
+     *      min = 0.01,
+     *      minMessage = "Min TransactionAmountBuy is {{ limit }}"
+     * )
      */
     protected $TransactionAmountBuy;
             
     /**
      * @ORM\Column(type="decimal", scale=5)
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(
+     *      message="TransactionRate cannot be empty"
+     * )
      */
     protected $TransactionRate;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(
+     *      message="TransactionTime cannot be empty"
+     * )
      */
     protected $TransactionTime;
     
     /**
      * @ORM\Column(type="string", length=5)
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(
+     *      message="TransactionOrigin cannot be empty"
+     * )
      */
     protected $TransactionOrigin;
     
-    function getTransactionID() {
+    /**
+     * @Assert\True(message = "Incorrect currency conversion")
+     */
+    public function isConversionCorerct()
+    {
+        return $this->getTransactionAmountBuy() == $this->getTransactionAmountSell() * $this->getTransactionRate();
+    }
+    
+    public function getTransactionID() {
         return $this->TransactionID;
     }
     
@@ -79,71 +113,59 @@ class Transaction
         $this->TransactionUserID = $TransactionUserID;
     }
     
-    function getTransactionCurrencyFrom() {
+    public function getTransactionCurrencyFrom() {
         return $this->TransactionCurrencyFrom;
     }
 
-    function getTransactionCurrencyTo() {
+    public function getTransactionCurrencyTo() {
         return $this->TransactionCurrencyTo;
     }
 
-    function getTransactionAmountSell() {
+    public function getTransactionAmountSell() {
         return $this->TransactionAmountSell;
     }
 
-    function getTransactionAmountBuy() {
+    public function getTransactionAmountBuy() {
         return $this->TransactionAmountBuy;
     }
 
-    function getTransactionRate() {
+    public function getTransactionRate() {
         return $this->TransactionRate;
     }
 
-    function getTransactionTime() {
+    public function getTransactionTime() {
         return $this->TransactionTime;
     }
 
-    function getTransactionOrigin() {
+    public function getTransactionOrigin() {
         return $this->TransactionOrigin;
     }
 
-    function setTransactionCurrencyFrom($TransactionCurrencyFrom) {
+    public function setTransactionCurrencyFrom($TransactionCurrencyFrom) {
         $this->TransactionCurrencyFrom = $TransactionCurrencyFrom;
     }
 
-    function setTransactionCurrencyTo($TransactionCurrencyTo) {
+    public function setTransactionCurrencyTo($TransactionCurrencyTo) {
         $this->TransactionCurrencyTo = $TransactionCurrencyTo;
     }
 
-    function setTransactionAmountSell($TransactionAmountSell) {
+    public function setTransactionAmountSell($TransactionAmountSell) {
         $this->TransactionAmountSell = $TransactionAmountSell;
     }
 
-    function setTransactionAmountBuy($TransactionAmountBuy) {
+    public function setTransactionAmountBuy($TransactionAmountBuy) {
         $this->TransactionAmountBuy = $TransactionAmountBuy;
     }
 
-    function setTransactionRate($TransactionRate) {
+    public function setTransactionRate($TransactionRate) {
         $this->TransactionRate = $TransactionRate;
     }
 
-    function setTransactionTime($TransactionTime) {
+    public function setTransactionTime($TransactionTime) {
         $this->TransactionTime = $TransactionTime;
     }
 
-    function setTransactionOrigin($TransactionOrigin) {
+    public function setTransactionOrigin($TransactionOrigin) {
         $this->TransactionOrigin = $TransactionOrigin;
-    }
-    
-    function transmitData($params) {
-        $client = new Client(new Version1X('https://mtp-webapp.herokuapp.com'));
-        try {
-            $client->initialize();
-            $client->emit('send transaction', $params);
-            $client->close();
-        }
-        catch (ServerConnectionFailureException $e) {
-            echo 'Server Connection Failure!!';
-        }
     }
 }
