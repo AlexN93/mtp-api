@@ -11,8 +11,8 @@ lexx_tech_mtp_count:
     defaults: { _controller: LexxTechMTPBundle:Transaction:transactionsPerCountry}
     
 lexx_tech_mtp_index:
-    path:     /index
-    defaults: { _controller: LexxTechMTPBundle:Transaction:index }
+    path:     /create
+    defaults: { _controller: LexxTechMTPBundle:Transaction:create }
     
 lexx_tech_mtp_welcome:
     path:     /

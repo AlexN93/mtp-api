@@ -74,9 +74,9 @@ class TransactionController extends Controller
         return new JsonResponse($transactions, 200, $this->getHeaders());
     }
     
-    public function indexAction()
+    public function createAction()
     {
-        return $this->render('LexxTechMTPBundle:Default:index.html.twig');
+        return $this->render('LexxTechMTPBundle:Default:create.html.twig');
     }
     
     public function welcomeAction()
