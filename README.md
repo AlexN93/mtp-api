@@ -19,7 +19,11 @@ Body request :
 
 If everything goes alright, it will return <br>
 ```
-Created Transaction with id (someid)
+[
+    {
+        "message": "Created Transaction with id 1"
+    }
+]
 ```
 And transmit the data to the [MTP Web App](https://mtp-webapp.herokuapp.com/) front end. <br>
 
@@ -86,6 +90,22 @@ $ composer install
 $ php app/console doctrine:schema:update --force
 ```
 
-## Unit test
+## Unit tests
 
-Sometime in the future when I've time to write them :)
+There are 4 tests that try the entity validation. To run them you will need [phpunit](https://phpunit.de/) or use the one in the project. <br>
+Navigate to the project folder and run <br>
+```
+$ phpunit -c app/
+```
+This should return the following <br>
+```
+PHPUnit 4.6.6 by Sebastian Bergmann and contributors.
+
+Configuration read from /var/www/mtp_api/app/phpunit.xml.dist
+
+....
+
+Time: 14.71 seconds, Memory: 25.50Mb
+
+OK (4 tests, 17 assertions)
+```
